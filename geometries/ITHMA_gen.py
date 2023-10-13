@@ -26,8 +26,8 @@ def create(params):
         create_by_angle = params['create_by_angle']
 
     
-    mid_radius = (outer_radius + inner_radius)/2
-    dradius = np.abs(outer_radius - inner_radius)
+    mid_radius = (params['outer_radius'] + params['inner_radius'])/2
+    dradius = np.abs(params['outer_radius'] - params['inner_radius'])
     npole = 8
     if create_by_angle:
         if "ratio" not in params:
@@ -65,8 +65,8 @@ def create(params):
     angle_straight_inner = angle_per_pole - angle_quer_inner
 
     if 'magangle' not in params:
-        p1 = np.array([outer_radius-magnet_depth/2, 0])
-        p2 = np.array([(outer_radius-magnet_depth*3/4)*np.cos(-1*np.deg2rad((angle_quer_inner + angle_quer_outer)/4)), (outer_radius-magnet_depth*3/4)*np.sin(-1*np.deg2rad((angle_quer_inner + angle_quer_outer)/4))])
+        p1 = np.array([params['outer_radius']-magnet_depth/2, 0])
+        p2 = np.array([(params['outer_radius']-magnet_depth*3/4)*np.cos(-1*np.deg2rad((angle_quer_inner + angle_quer_outer)/4)), (params['outer_radius']-magnet_depth*3/4)*np.sin(-1*np.deg2rad((angle_quer_inner + angle_quer_outer)/4))])
         d1 = p1 - p2
         angle_degrees = np.rad2deg(np.abs(np.arctan(np.abs(d1[0])/np.abs(d1[1]))))
         angle_degrees = angle_degrees if halbach_side == 'A' else -angle_degrees
@@ -78,31 +78,20 @@ def create(params):
     segments_quer = int(max(angle_quer_inner, angle_quer_outer)/angle_precision)
     segments_quer_half = int(segments_quer/2)
     segments_straight = int(max(angle_straight_inner, angle_straight_outer)/angle_precision)
-    drawTangentialMagnet(outer_radius-magnet_depth, outer_radius, 0, angle_quer_inner/2, 0, angle_quer_outer/2, segments=segments_quer_half, material="N28UH", magdir=-halbach_angle-angle_degrees,draw_first=False, draw_last=False, group=11)
-    drawTangentialMagnet(outer_radius-magnet_depth, outer_radius, angle_quer_inner/2, angle_quer_inner/2 + angle_straight_inner, angle_quer_outer/2, angle_quer_outer/2 + angle_straight_outer, segments=segments_straight, material="N28UH", magdir=180, group=12)
-    drawTangentialMagnet(outer_radius-magnet_depth, outer_radius, angle_quer_inner/2 + angle_straight_inner, angle_per_pole, angle_quer_outer/2 + angle_straight_outer, angle_per_pole, segments=segments_quer_half, material="N28UH", magdir=halbach_angle+angle_degrees, draw_first=False, draw_last=True, group=13) 
-    drawTangentialMagnet(outer_radius-magnet_depth, outer_radius, angle_per_pole, angle_quer_inner*3/2 + angle_straight_inner, angle_per_pole, angle_quer_outer*3/2 + angle_straight_outer, segments=segments_quer_half, material="N28UH", magdir=halbach_angle-angle_degrees, draw_first=False, draw_last=False, group=13) 
-    drawTangentialMagnet(outer_radius-magnet_depth, outer_radius, angle_quer_inner*3/2 + angle_straight_inner, angle_quer_inner*3/2 + 2*angle_straight_inner, angle_quer_outer*3/2 + angle_straight_outer, angle_quer_outer*3/2 + 2*angle_straight_outer, segments=segments_straight, material="N28UH", magdir=0, group=14)  
-    drawTangentialMagnet(outer_radius-magnet_depth, outer_radius, angle_quer_inner*3/2 + 2*angle_straight_inner, angle_quer_inner*2 + 2*angle_straight_inner, angle_quer_outer*3/2 + 2*angle_straight_outer, angle_quer_outer*2 + 2*angle_straight_outer, segments=segments_quer_half, material="N28UH", magdir=-halbach_angle+angle_degrees, draw_first=False, draw_last=False, group=11) 
-    hlfdepth = (outer_radius-magnet_depth-inner_radius)/2 + inner_radius
+    drawTangentialMagnet(params['outer_radius']-magnet_depth, params['outer_radius'], 0, angle_quer_inner/2, 0, angle_quer_outer/2, segments=segments_quer_half, material="N28UH", magdir=-halbach_angle-angle_degrees,draw_first=False, draw_last=False, group=11)
+    drawTangentialMagnet(params['outer_radius']-magnet_depth, params['outer_radius'], angle_quer_inner/2, angle_quer_inner/2 + angle_straight_inner, angle_quer_outer/2, angle_quer_outer/2 + angle_straight_outer, segments=segments_straight, material="N28UH", magdir=180, group=12)
+    drawTangentialMagnet(params['outer_radius']-magnet_depth, params['outer_radius'], angle_quer_inner/2 + angle_straight_inner, angle_per_pole, angle_quer_outer/2 + angle_straight_outer, angle_per_pole, segments=segments_quer_half, material="N28UH", magdir=halbach_angle+angle_degrees, draw_first=False, draw_last=True, group=13) 
+    drawTangentialMagnet(params['outer_radius']-magnet_depth, params['outer_radius'], angle_per_pole, angle_quer_inner*3/2 + angle_straight_inner, angle_per_pole, angle_quer_outer*3/2 + angle_straight_outer, segments=segments_quer_half, material="N28UH", magdir=halbach_angle-angle_degrees, draw_first=False, draw_last=False, group=13) 
+    drawTangentialMagnet(params['outer_radius']-magnet_depth, params['outer_radius'], angle_quer_inner*3/2 + angle_straight_inner, angle_quer_inner*3/2 + 2*angle_straight_inner, angle_quer_outer*3/2 + angle_straight_outer, angle_quer_outer*3/2 + 2*angle_straight_outer, segments=segments_straight, material="N28UH", magdir=0, group=14)  
+    drawTangentialMagnet(params['outer_radius']-magnet_depth, params['outer_radius'], angle_quer_inner*3/2 + 2*angle_straight_inner, angle_quer_inner*2 + 2*angle_straight_inner, angle_quer_outer*3/2 + 2*angle_straight_outer, angle_quer_outer*2 + 2*angle_straight_outer, segments=segments_quer_half, material="N28UH", magdir=-halbach_angle+angle_degrees, draw_first=False, draw_last=False, group=11) 
+    hlfdepth = (params['outer_radius']-magnet_depth-params['inner_radius'])/2 + params['inner_radius']
     drawLabel(hlfdepth*np.cos(np.pi/4), hlfdepth*np.sin(np.pi/4), material="50JN400", group=5)   
     mi_clearselected()
-    mi_selectsegment(0, outer_radius-magnet_depth/2)
-    mi_selectsegment(outer_radius-magnet_depth/2, 0)
+    mi_selectsegment(0, params['outer_radius']-magnet_depth/2)
+    mi_selectsegment(params['outer_radius']-magnet_depth/2, 0)
     mi_setsegmentprop("PeriodicRotor05", 0, 1, 0, 5)
     
     return {'ratio_inner':ratio_inner, 'ratio_outer':ratio_outer, 'ratio':ratio, 'angle':angle, 'magangle':angle_degrees, 'x':angle, 'y':angle_degrees}
 
 if __name__ == "__main__":
-    openfemm()
-    if os.path.exists("tmp.fem"):
-        os.remove("tmp.fem")
-    shutil.copyfile("stator_quater.FEM", "tmp.fem")
-    opendocument("tmp.fem")
-    drawLine(0, 0, outer_radius, 0)
-    drawLine(0, 0, 0, outer_radius)
-    drawArc(outer_radius, 0, 0, outer_radius, 90)
-    create({'magnet_depth':3, 'ratio':0.1, 'angle':-8, 'magangle':-10, 'halbach_side':'B', 'create_by_angle': True})
-    input()
-    closefemm()
     sys.exit(0) 

@@ -11,7 +11,7 @@ mag_angle_deg = 0.5
 def bdnry():
     return [[0.1, 3], [0.1, 50]]
 
-def add_magnet(aa, ab, width, angle, direction, bdry="<None>", elemsize=0, automesh=1, posthide=0, group=0, material="<None>", meshsize=0, incircuit="<None>", magdir=0, turns=0, ro=outer_radius):
+def add_magnet(aa, ab, width, angle, direction, bdry="<None>", elemsize=0, automesh=1, posthide=0, group=0, material="<None>", meshsize=0, incircuit="<None>", magdir=0, turns=0, ro=16.1):
     angle = constrain(angle, -bdnry()[1][1], bdnry()[1][1])
 
     aa_rad = np.deg2rad(aa)
@@ -78,10 +78,7 @@ def create(params):
     else:
         angle_margin = params["angle_margin"]
 
-    if 'outer_radius' not in params:
-        ro = outer_radius
-    else:
-        ro = params['outer_radius']
+    ro = params['outer_radius']
     
     if magnet_width < bdnry()[0][0]:
         magnet_width = bdnry()[0][0]
@@ -111,7 +108,7 @@ def create(params):
     drawLabel(np.cos(np.deg2rad(22.5))*(ro-0.1), np.sin(np.deg2rad(22.5))*(ro-0.1), material="50JN400")
     drawLabel(np.cos(np.deg2rad(22.5+45))*(ro-0.1), np.sin(np.deg2rad(22.5+45))*(ro-0.1), material="50JN400")
 
-    drawLabel(np.cos(np.deg2rad(45))*((ro-inner_radius)/2 + inner_radius), np.sin(np.deg2rad(45))*((ro-inner_radius)/2 + inner_radius), material="50JN400")
+    drawLabel(np.cos(np.deg2rad(45))*((ro-params['inner_radius'])/2 + params['inner_radius']), np.sin(np.deg2rad(45))*((ro-params['inner_radius'])/2 + params['inner_radius']), material="50JN400")
 
     mi_clearselected()
     mi_selectsegment(0, ro-0.01)
@@ -121,15 +118,4 @@ def create(params):
     return {"magnet_width":hait, 'x':magnet_width, 'y':angle}
 
 if __name__ == "__main__":
-    openfemm()
-    if os.path.exists("tmp.fem"):
-        os.remove("tmp.fem")
-    shutil.copyfile("stator_quater.FEM", "tmp.fem")
-    opendocument("tmp.fem")
-    drawLine(0, 0, outer_radius, 0)
-    drawLine(0, 0, 0, outer_radius)
-    drawArc(outer_radius, 0, 0, outer_radius, 90)
-    create({'magnet_depth':2.25, 'magnet_angle': 22.5+12.5, 'angle_margin':0, 'outer_radius':16.1})
-    input()
-    closefemm()
     sys.exit(0) # Cleanly exit program.

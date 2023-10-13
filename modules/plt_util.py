@@ -14,12 +14,12 @@ plt_params = {
     'text.usetex': True,
     'text.latex.preamble': r'\usepackage{amsmath} \usepackage{xfrac} \usepackage{eurosym}',
     'font.family': 'sans-serif',
-    'axes.labelsize': 16,
+    'axes.labelsize': 32,
     'axes.labelweight': 'bold',
-    'font.size': 12,
-    'legend.fontsize': 6,
-    'xtick.labelsize': 8,
-    'ytick.labelsize': 8,
+    'font.size': 24,
+    'legend.fontsize': 16,
+    'xtick.labelsize': 16,
+    'ytick.labelsize': 16,
     'xtick.major.pad': 0,
     'ytick.major.pad': 0,
 }
@@ -86,7 +86,7 @@ def create_heatmap_interp(data, xlabel="", ylabel="", zlabel="", clevels=10, pre
     interp_func = RectBivariateSpline(y, x, values)  
     interpolated_data = interp_func(y_new, x_new)  
 
-    fig = plt.figure(figsize=set_size(fraction=fraction, ratio=4/3))
+    fig = plt.figure()
     ax = fig.subplots()
     heatmap = ax.imshow(interpolated_data, extent=(min(x), max(x), min(y), max(y)),  
             origin='lower', cmap=cm, aspect='auto')
@@ -94,32 +94,28 @@ def create_heatmap_interp(data, xlabel="", ylabel="", zlabel="", clevels=10, pre
     contour_levels = np.linspace(interpolated_data.min(), interpolated_data.max(), clevels + 2)
     contour = ax.contour(xx, yy, interpolated_data, levels=contour_levels, colors='black', linewidths=lwidth)
 
-    ax.clabel(contour, inline=True, fontsize=4.5, fmt=fmt)
+    ax.clabel(contour, inline=True, fontsize=10, fmt=fmt)
 
-    yfntsze = min(
-        calculate_fontsize(r''+ylabel, plt.rcParams['axes.labelsize'], set_size(fraction=fraction, ratio=4/3)[1]*0.95),
-        calculate_fontsize(r''+zlabel, plt.rcParams['axes.labelsize'], set_size(fraction=fraction, ratio=4/3)[1]*0.95),
-    )
     cbar = fig.colorbar(heatmap)
-    cbar.set_label(r'' + zlabel + r'', labelpad=1, fontsize=yfntsze)
+    cbar.set_label(r'' + zlabel + r'', labelpad=1)
     cbar.set_ticks(contour_levels)
     cbar.formatter = fmt
     cbar.ax.tick_params(axis='both', which='major', pad=1, length=2)
 
-    ax.set_xlabel(r'' + xlabel + r'', labelpad=1, fontsize=yfntsze)
-    ax.set_ylabel(r'' + ylabel + r'', labelpad=1, fontsize=yfntsze)
+    ax.set_xlabel(r'' + xlabel + r'', labelpad=1)
+    ax.set_ylabel(r'' + ylabel + r'', labelpad=1)
     ax.tick_params(axis='both', which='major', pad=1, length=2)
 
     ax.xaxis.set_major_formatter(fmt)
     ax.yaxis.set_major_formatter(fmt)
 
-    fig.tight_layout(pad=0.05, h_pad=None, w_pad=None, rect=None)
+    fig.tight_layout(pad=1, h_pad=None, w_pad=None, rect=None)
 
     return fig, ax
 
 def twinPlot(data, axis=None, fraction=0.49, ratio=0, labelloc='upper left'):
     if axis is None:
-        fig = plt.figure(figsize=set_size(fraction=fraction, ratio=ratio))
+        fig = plt.figure()
         gs = GridSpec(
             1,
             1
@@ -134,11 +130,6 @@ def twinPlot(data, axis=None, fraction=0.49, ratio=0, labelloc='upper left'):
     y1label = data['y1label'] if 'y1label' in data else ''
     y2label = data['y2label'] if 'y2label' in data else ''
     x1label = data['x1label'] if 'x1label' in data else ''
-
-    yfntsze = min(
-        calculate_fontsize(r''+y1label, plt.rcParams['axes.labelsize'], set_size(fraction=fraction, ratio=ratio)[1]*0.95),
-        calculate_fontsize(r''+y2label, plt.rcParams['axes.labelsize'], set_size(fraction=fraction, ratio=ratio)[1]*0.95),
-    )
     
     if axis is None:
         ax1 = fig.add_subplot(gs[0, 0])
@@ -159,7 +150,7 @@ def twinPlot(data, axis=None, fraction=0.49, ratio=0, labelloc='upper left'):
     if dat4 is not None:
         ax2.plot(dat4["x"], dat4["y"], linewidth=lwidth, color=col2, linestyle='dashed')
     if 'y2label' in data:
-        ax2.set_ylabel(r'' + y2label, fontsize=yfntsze, labelpad=1)
+        ax2.set_ylabel(r'' + y2label, labelpad=1)
         ax2.yaxis.set_major_formatter(fmt)
         ax2.tick_params(axis='y', which='major', pad=1, length=2)
     ax1.grid(zorder=1, linewidth=lwidth*3/4)
@@ -173,10 +164,10 @@ def twinPlot(data, axis=None, fraction=0.49, ratio=0, labelloc='upper left'):
     legend.get_frame().set_linewidth(lwidth)
     ax2.add_artist(legend)
     if 'y1label' in data:
-        ax1.set_ylabel(r'' + y1label, fontsize=yfntsze, labelpad=1)
+        ax1.set_ylabel(r'' + y1label, labelpad=1)
         ax1.yaxis.set_major_formatter(fmt)
     if 'x1label' in data:
-        ax1.set_xlabel(r'' + x1label, fontsize=yfntsze, labelpad=1)
+        ax1.set_xlabel(r'' + x1label, labelpad=1)
         ax1.xaxis.set_major_formatter(fmt)
         ax1.tick_params(axis='both', which='major', pad=1, length=2)
     ax1.set_xlim([
@@ -188,7 +179,7 @@ def twinPlot(data, axis=None, fraction=0.49, ratio=0, labelloc='upper left'):
         ax2.yaxis.label.set_color(col2)
     else:
         ax2 = None
-    fig.tight_layout(pad=0.05, h_pad=None, w_pad=None, rect=None)
+    fig.tight_layout(pad=1, h_pad=None, w_pad=None, rect=None)
     if axis is None:
         return fig, [ax1, ax2]
     else:

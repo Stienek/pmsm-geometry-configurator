@@ -1,12 +1,11 @@
 from femm import *
 from multimethod import overload 
 import numpy as np
+import sys
 
-rotor_radius = 16.4 
-outer_radius = 16.1 
-inner_radius_bonus = 7.5 
-inner_radius = 5.0 
-magnet_area = 15.512 
+sys.path.insert(0, os.getcwd())
+mashine_settings = {}
+
 
 def constrain(value, min_val, max_val):
     if isinstance(value, np.ndarray):
@@ -98,7 +97,7 @@ def drawRectangle(x, y, width, height, angle_degrees, bdry="<None>", elemsize=0,
     drawLabel(x, y, material=material, automesh=automesh, meshsize=meshsize, incircuit=incircuit, magdir=magdir, group=group, turns=turns)
     return np.array([x1, y1]), np.array([x2, y2]), np.array([x3, y3]), np.array([x4, y4])
 
-def drawSurfaceMagnet(width, height, angle=-90, surface_radius=outer_radius, bdry="<None>", elemsize=0, automesh=1, posthide=0, group=0, material="<None>", meshsize=0, incircuit="<None>", magdir=0, turns=0):
+def drawSurfaceMagnet(width, height, angle=-90, surface_radius=16.1, bdry="<None>", elemsize=0, automesh=1, posthide=0, group=0, material="<None>", meshsize=0, incircuit="<None>", magdir=0, turns=0):
     magnet_inset = arcDepth(surface_radius, width)
     drawLine(-width/2, -surface_radius + magnet_inset, -width/2, -surface_radius + height, bdry=bdry, elemsize=elemsize, automesh=automesh, posthide=posthide, group=group)
     drawLine(width/2, -surface_radius + magnet_inset, width/2, -surface_radius + height, bdry=bdry, elemsize=elemsize, automesh=automesh, posthide=posthide, group=group)
@@ -109,7 +108,7 @@ def drawSurfaceMagnet(width, height, angle=-90, surface_radius=outer_radius, bdr
     mi_clearselected()
     drawLabel((surface_radius - height/2)*np.cos(np.deg2rad(angle)), (surface_radius - height/2)*np.sin(np.deg2rad(angle)), material=material, automesh=automesh, meshsize=meshsize, incircuit=incircuit, magdir=magdir, group=group, turns=turns)
 
-def drawBurriedMagnet(width, height, angle=-90, surface_radius=outer_radius, bdry="<None>", elemsize=0, automesh=1, posthide=0, group=0, material="<None>", meshsize=0, incircuit="<None>", magdir=0, turns=0):
+def drawBurriedMagnet(width, height, angle=-90, surface_radius=16.1, bdry="<None>", elemsize=0, automesh=1, posthide=0, group=0, material="<None>", meshsize=0, incircuit="<None>", magdir=0, turns=0):
     magnet_inset = arcDepth(surface_radius, width)
     drawLine(-width/2, -surface_radius + magnet_inset, -width/2, -surface_radius + height + magnet_inset, bdry=bdry, elemsize=elemsize, automesh=automesh, posthide=posthide, group=group)
     drawLine(width/2, -surface_radius + magnet_inset, width/2, -surface_radius + height + magnet_inset, bdry=bdry, elemsize=elemsize, automesh=automesh, posthide=posthide, group=group)
