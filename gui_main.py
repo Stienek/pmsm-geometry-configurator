@@ -1294,7 +1294,7 @@ class MainWindow(QMainWindow):
 
 if __name__=="__main__":
     app = QApplication(sys.argv)
-    qd.setup_theme(theme='light', custom_colors={"primary": "#C7105C"}, corner_shape="sharp")
+    #qd.setup_theme(theme='light', custom_colors={"primary": "#C7105C"}, corner_shape="sharp")
     window = MainWindow()
     window.show()
     app.exec()
